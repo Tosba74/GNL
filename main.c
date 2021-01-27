@@ -1,26 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bmangin <bmangin@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/19 13:19:57 by bmangin           #+#    #+#             */
-/*   Updated: 2021/01/21 10:53:26 by bmangin          ###   ########lyon.fr   */
+/*   Created: 2020/12/18 15:39:30 by bmangin           #+#    #+#             */
+/*   Updated: 2021/01/21 16:22:58 by bmangin          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "get_next_line.h"
+#include <fcntl.h>
+#include <sys/stat.h>
 
-# include <unistd.h>
-# include <stdlib.h>
-# include <limits.h>
-# include <fcntl.h>
+#include <stdio.h>
 
-int		get_next_line(int fd, char **line);
-size_t	ft_strlen(char *s);
-char	*ft_strdup(char *s);
-char	*ft_strjoin(char *s1, char *s2);
+int		main(void)
+{
+	int		fd;
+	int		ret;
+	char	*line;
 
-#endif
+	fd = open("../../test2", O_RDONLY);
+	while ((ret = get_next_line(fd, &line)) > 0)
+	{
+		printf("LINE => |%s|\n", line);
+		free(line);
+	}
+	printf("LINE => |%s|\n", line);
+	free(line);
+	close(fd);
+	return (0);
+}

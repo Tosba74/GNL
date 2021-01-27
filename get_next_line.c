@@ -6,7 +6,7 @@
 /*   By: bmangin <bmangin@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 13:26:22 by bmangin           #+#    #+#             */
-/*   Updated: 2021/01/21 12:31:30 by bmangin          ###   ########lyon.fr   */
+/*   Updated: 2021/01/27 16:33:13 by bmangin          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,7 @@ char	*ft_copy_line(char *rest, char *line)
 	if (!(line = malloc(sizeof(char) * len + 1)))
 		return (NULL);
 	while (rest[++i] != '\n' && rest[i])
-	{
 		line[i] = rest[i];
-	}
 	line[i] = '\0';
 	return (line);
 }
@@ -46,28 +44,33 @@ char	*ft_after_oel(char *rest)
 {
 	int		i;
 	int		j;
+	int		len;
+	char	*tmp;
 
 	i = 0;
 	j = 0;
+	len = ft_strlen(rest) - ft_find_eol(rest);
+	if (!(tmp = malloc(sizeof(char) * len + 1)))
+		return (NULL);
 	while (rest[i] != '\n')
 		i++;
 	while (rest[++i])
-		rest[j++] = rest[i];
-	rest[j] = '\0';
-	return (rest);
+		tmp[j++] = rest[i];
+	tmp[j] = '\0';
+	free(rest);
+	return (tmp);
 }
 
 int		ft_create_line(char *rest, char **line, int ret)
 {
-	if (ret < BUFFER_SIZE)
+	*line = ft_copy_line(rest, *line);
+	if (ret == 0)
 	{
-		*line = ft_strdup(rest);
 		free(rest);
 		return (0);
 	}
 	else
 	{
-		*line = ft_copy_line(rest, *line);
 		rest = ft_after_oel(rest);
 	}
 	return (1);
@@ -76,7 +79,7 @@ int		ft_create_line(char *rest, char **line, int ret)
 int		get_next_line(int fd, char **line)
 {
 	int				ret;
-	char			buf[BUFFER_SIZE + 1];
+	char			buf[ARG_MAX];
 	static char		*rest;
 
 	if (!line || fd < 0 || BUFFER_SIZE <= 0)
@@ -86,10 +89,13 @@ int		get_next_line(int fd, char **line)
 	while (ft_find_eol(rest) == -1)
 	{
 		if ((ret = read(fd, buf, BUFFER_SIZE)) < 0)
+		{
+			free(rest);
 			return (-1);
+		}
 		buf[ret] = '\0';
 		rest = ft_strjoin(rest, buf);
-		if (ret < BUFFER_SIZE)
+		if (ret == 0)
 			break ;
 	}
 	return (ft_create_line(rest, line, ret));

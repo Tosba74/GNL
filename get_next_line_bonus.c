@@ -6,7 +6,7 @@
 /*   By: bmangin <bmangin@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 13:26:22 by bmangin           #+#    #+#             */
-/*   Updated: 2021/01/21 13:12:05 by bmangin          ###   ########lyon.fr   */
+/*   Updated: 2021/01/27 11:33:19 by bmangin          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,18 @@ int		ft_find_eol(char *s)
 char	*ft_copy_line(char *rest, char *line)
 {
 	int		i;
-	int		len;
 
-	i = -1;
-	len = ft_find_eol(rest);
-	if (len == -1)
-		len = ft_strlen(rest);
-	if (!(line = malloc(sizeof(char) * len + 1)))
-		return (NULL);
-	while (rest[++i] != '\n' && rest[i])
+	i = 0;
+	while (rest[i] && rest[i] != '\n')
+		i++;
+	if (!(line = malloc(sizeof(char) * i + 1)))
 	{
-		line[i] = rest[i];
+		if (rest)
+			free(rest);
+		return (NULL);
 	}
+	while (rest[++i] != '\n' && rest[i])
+		line[i] = rest[i];
 	line[i] = '\0';
 	return (line);
 }
@@ -46,37 +46,42 @@ char	*ft_after_oel(char *rest)
 {
 	int		i;
 	int		j;
+	char	*s;
 
 	i = 0;
 	j = 0;
-	while (rest[i] != '\n')
+	while (rest[i] && rest[i] != '\n')
 		i++;
+	if (!(s = malloc(sizeof(char) * (ft_strlen(rest) - i))) || !rest[i])
+	{
+		if (rest)
+			free(rest);
+		return (NULL);
+	}
 	while (rest[++i])
-		rest[j++] = rest[i];
-	rest[j] = '\0';
-	return (rest);
+		s[j++] = rest[i];
+	s[j] = '\0';
+	return (s);
 }
 
 int		ft_create_line(char *rest, char **line, int ret)
 {
-	if (ret < BUFFER_SIZE)
+	*line = ft_copy_line(rest, *line);
+	if (ret == 0)
 	{
-		*line = ft_strdup(rest);
-		free(rest);
+		if (rest)
+			free(rest);
 		return (0);
 	}
 	else
-	{
-		*line = ft_copy_line(rest, *line);
 		rest = ft_after_oel(rest);
-	}
 	return (1);
 }
 
 int		get_next_line(int fd, char **line)
 {
 	int				ret;
-	char			buf[BUFFER_SIZE + 1];
+	char			buf[ARG_MAX];
 	static char		*rest[OPEN_MAX];
 
 	if (!line || fd < 0 || BUFFER_SIZE <= 0)
@@ -85,11 +90,15 @@ int		get_next_line(int fd, char **line)
 		rest[fd] = ft_strdup("");
 	while (ft_find_eol(rest[fd]) == -1)
 	{
-		if ((ret = read(fd, buf, BUFFER_SIZE)) < 0)
+		if ((ret = read(fd, buf, BUFFER_SIZE)) == -1)
+		{
+			if (rest[fd])
+				free(rest[fd]);
 			return (-1);
+		}
 		buf[ret] = '\0';
 		rest[fd] = ft_strjoin(rest[fd], buf);
-		if (ret < BUFFER_SIZE)
+		if (ret == 0)
 			break ;
 	}
 	return (ft_create_line(rest[fd], line, ret));
