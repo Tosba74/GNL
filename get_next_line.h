@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bmangin <bmangin@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/28 21:53:32 by bmangin           #+#    #+#             */
-/*   Updated: 2021/01/28 22:40:55 by bmangin          ###   ########lyon.fr   */
+/*   Created: 2021/01/31 21:27:03 by bmangin           #+#    #+#             */
+/*   Updated: 2021/02/01 11:17:27 by bmangin          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@
 
 int				get_next_line(int fd, char **line);
 size_t			ft_strlen(char *s);
+void			ft_memdel(void *ap);
 char			*ft_strdup(char *src);
-char			*ft_strjoin(char *s1, char *s2, int f);
+char			*ft_strjoin(char *s1, char *s2);
 
 #endif

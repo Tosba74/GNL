@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bmangin <bmangin@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/28 21:53:14 by bmangin           #+#    #+#             */
-/*   Updated: 2021/01/28 22:53:27 by bmangin          ###   ########lyon.fr   */
+/*   Created: 2021/01/31 21:26:38 by bmangin           #+#    #+#             */
+/*   Updated: 2021/02/01 13:24:00 by bmangin          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,29 @@ size_t		ft_strlen(char *s)
 	return (i);
 }
 
+void		ft_memdel(void *ap)
+{
+	if (ap)
+	{
+		free(ap);
+		ap = NULL;	
+	}
+}
+
 char		*ft_strdup(char *src)
 {
-	char	*str;
 	long	i;
+	char	*s;
 
-	if (!(str = malloc(sizeof(char) * (ft_strlen(src) + 1))))
+	i = -1;
+	if (!src)
 		return (NULL);
-	i = 0;
-	while (src[i++])
-		str[i] = src[i];
-	str[i] = '\0';
-	return (str);
+	if (!(s = malloc(sizeof(char) * (ft_strlen(src) + 1))))
+		return (NULL);
+	while (src[++i])
+		s[i] = src[i];
+	s[i] = '\0';
+	return (s);
 }
 
 char		*ft_strjoin(char *s1, char *s2)
@@ -44,16 +55,20 @@ char		*ft_strjoin(char *s1, char *s2)
 
 	if (!s1 || !s2)
 		return (NULL);
-	i = -1;
-	j = -1;
+	i = 0;
+	j = 0;
 	if (!(s = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1))))
 		return (NULL);
-	while (s1[++j])
-		s[++i] = s1[j];
-	j = -1;
-	while (s2[++j])
-		s[++i] = s2[j];
-	s[i + 1] = '\0';
-	free(s1);
+	while (s1[j])
+		s[i++] = s1[j++];
+	j = 0;
+	while (s2[j])
+		s[i++] = s2[j++];
+	s[i] = '\0';
+	if (s1)
+	{
+		free(s1);
+		s1 = NULL;
+	}
 	return (s);
 }

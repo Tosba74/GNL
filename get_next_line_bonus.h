@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bmangin <bmangin@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/28 21:53:24 by bmangin           #+#    #+#             */
-/*   Updated: 2021/01/28 22:41:46 by bmangin          ###   ########lyon.fr   */
+/*   Created: 2021/01/31 21:27:03 by bmangin           #+#    #+#             */
+/*   Updated: 2021/02/01 13:03:47 by bmangin          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,10 @@
 # include <unistd.h>
 # include <limits.h>
 
-int				get_next_line(int fd, char **line);
 size_t			ft_strlen(char *s);
+void			ft_memdel(void *ap);
 char			*ft_strdup(char *src);
 char			*ft_strjoin(char *s1, char *s2);
+int				get_next_line(int fd, char **line);
 
 #endif
